@@ -6,7 +6,7 @@ export default function Navbar() {
   return (
     <nav className={styles.nav}>
       <span className={styles.logo}>
-        <Link href="/">DreamFlyAir</Link>
+        <Link href="/">FlyDreamAir</Link>
       </span>
       {/* This links are just for testing */}
       {/* <span className={styles.container}>
