@@ -10,6 +10,8 @@ interface State {
 interface Actions {
   setReturnFlight: (flight: Flight) => void;
   setDepartFlight: (flight: Flight) => void;
+
+  resetFlight: () => void;
 }
 
 export const useFlightStore = create<State & Actions>()(set => ({
@@ -18,4 +20,6 @@ export const useFlightStore = create<State & Actions>()(set => ({
 
   setReturnFlight: (flight: Flight) => set({ returnFlight: flight }),
   setDepartFlight: (flight: Flight) => set({ departFlight: flight }),
+
+  resetFlight: () => set({ returnFlight: undefined, departFlight: undefined }),
 }));

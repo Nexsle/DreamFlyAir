@@ -14,20 +14,22 @@ export default function Services() {
   const total = items.reduce((acc, item) => acc + item.price * item.quantity, 0);
 
   return (
-    <ItemContext.Provider value={setItems}>
+    <>
       <section className={styles.main}>
         <section className={styles.padder}>
           <h1 className={styles.heading}>Departing Flight</h1>
-          {items.map((item, i) => (
-            <ServiceItem key={i} item={item} />
-          ))}
+          <ItemContext.Provider value={setItems}>
+            {items.map((item, i) => (
+              <ServiceItem key={i} item={item} />
+            ))}
+          </ItemContext.Provider>
         </section>
 
         <section className={styles.padder}>
           <MenuList />
         </section>
       </section>
-      <Continue price={total} />
-    </ItemContext.Provider>
+      <Continue price={total} link="./detail" />
+    </>
   );
 }
