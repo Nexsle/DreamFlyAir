@@ -36,12 +36,6 @@ export default function Details() {
   return (
     <>
       <section className={styles.section}>
-        <div className={styles.container}>
-          <h1 className={styles.heading}>Booking Details</h1>
-          {DATA.map((passenger, i) => (
-            <PassengerCard key={i} passenger={passenger} num={i} />
-          ))}
-        </div>
         <div className={styles.contact}>
           <h1 className={styles.heading}>Contact Information</h1>
 
@@ -86,7 +80,7 @@ export default function Details() {
           </span>
         </div>
       </section>
-      <Continue price={total} />
+      <Continue price={total} link="./payment" />
     </>
   );
 }

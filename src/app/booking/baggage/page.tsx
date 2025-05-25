@@ -1,65 +1,52 @@
 "use client";
 
-import { BaggageItem } from "@/types/Baggage";
 import { BaggageContext } from "@/context";
 import BaggageCard from "./_components/BaggageCard";
 
-import { useState } from "react";
 import Continue from "../_components/Continue";
+import { useBaggageStore } from "@/stores/baggageStore";
 import styles from "./baggage.module.css";
-import { usePassengerStore } from "@/stores/passengerStore";
-import { shallow } from "zustand/shallow";
-import Passenger from "@/types/Passenger";
-import { useShallow } from "zustand/shallow";
-
-const BAGGAGE_ITEMS: Array<BaggageItem> = [
-  { id: 1, type: "adult", departure: "outbound", weight: 0, price: 0 },
-  { id: 1, type: "adult", departure: "return", weight: 0, price: 0 },
-  { id: 2, type: "child", departure: "outbound", weight: 0, price: 0 },
-  { id: 2, type: "child", departure: "return", weight: 0, price: 0 },
-  { id: 3, type: "infant", departure: "outbound", weight: 0, price: 0 },
-  { id: 3, type: "infant", departure: "return", weight: 0, price: 0 },
-];
+import { useGlobalStore } from "@/stores/globalStore";
 
 export default function BaggagePage() {
-  const [baggage, setBaggage] = useState<Array<BaggageItem>>(BAGGAGE_ITEMS);
+  const hasReturn = useGlobalStore(state => state.hasReturnFlight);
 
-  const { adultPassengers, childPassengers, infantPassengers } = usePassengerStore(
-    useShallow(state => ({
-      adultPassengers: state.adultPassengers,
-      childPassengers: state.childPassengers,
-      infantPassengers: state.infantPassengers,
-    }))
-  );
+  const departing = useBaggageStore(state => state.depart);
+  const returning = useBaggageStore(state => state.return);
 
-  // }), shallow<Passenger>())
+  const setDepart = useBaggageStore(action => action.setDepart);
+  const setReturn = useBaggageStore(action => action.setReturn);
 
-  const departing = baggage.filter(item => item.departure === "outbound");
-  const returning = baggage.filter(item => item.departure === "return");
-
-  const total = baggage.reduce((acc, item) => acc + item.price, 0);
+  const total =
+    departing.reduce((acc, item) => acc + item.price, 0) +
+    returning.reduce((acc, item) => acc + item.price, 0);
 
   return (
-    <BaggageContext.Provider value={setBaggage}>
-      <div>
-        <h1 className={styles.heading}>Baggage</h1>
+    <div>
+      <h1 className={styles.heading}>Baggage</h1>
 
-        <section>
-          <h2 className={styles.heading2}>Departing Flight</h2>
+      <section>
+        <h2 className={styles.heading2}>Departing Flight</h2>
 
-          {departing.map(item => (
-            <BaggageCard key={`${item.id}-${item.departure}`} item={item} />
+        <BaggageContext.Provider value={setDepart}>
+          {departing.map((baggage, i) => (
+            <BaggageCard baggage={baggage} index={i} key={i} />
           ))}
+        </BaggageContext.Provider>
 
-          <h2 className={styles.heading2}>Arriving Flight</h2>
+        {hasReturn && (
+          <>
+            <h2 className={styles.heading2}>Arriving Flight</h2>
+            <BaggageContext.Provider value={setReturn}>
+              {returning.map((baggage, i) => (
+                <BaggageCard baggage={baggage} index={i} key={i} />
+              ))}
+            </BaggageContext.Provider>
+          </>
+        )}
 
-          {returning.map(item => (
-            <BaggageCard key={`${item.id}-${item.departure}`} item={item} />
-          ))}
-
-          <Continue link="/booking/seat" price={total} />
-        </section>
-      </div>
-    </BaggageContext.Provider>
+        <Continue link="./seat" price={total} />
+      </section>
+    </div>
   );
 }

@@ -7,52 +7,54 @@ export async function GET(request: NextRequest) {
   // clean search params
   const location = searchParams.get("location");
   const destination = searchParams.get("destination");
-  const hasReturn = searchParams.get("hasReturnFlight") === "true";
+  const hasReturn = Boolean(searchParams.get("hasReturnFlight"));
   const departureDate = searchParams.get("departureDate");
   const returnDate = searchParams.get("returnDate");
 
-  if (!location || !destination || location.trim() === '' || destination.trim() === '') {
+  if (!location || !destination || location.trim() === "" || destination.trim() === "") {
     return Response.json({
       departing: [],
       returning: [],
-      error: "Location and destination are required"
+      error: "Location and destination are required",
     });
   }
-  
-  console.log('API params:', { location, destination, hasReturn, departureDate, returnDate });
-  
+
+  console.log("API params:", { location, destination, hasReturn, departureDate, returnDate });
+
   try {
     const departingFlights = await GetFlights(location, destination, departureDate);
 
-    //dont query return if one way
-    const returningFlights = hasReturn && returnDate && returnDate.trim() !== ''
-      ? await GetFlights(destination, location, returnDate) 
-      : [];
-    
+    // dont query return if one way
+    const returningFlights =
+      hasReturn && returnDate && returnDate.trim() !== ""
+        ? await GetFlights(destination, location, returnDate)
+        : [];
+
     return Response.json({
       departing: departingFlights || [],
       returning: returningFlights || [],
     });
-
-
   } catch (error) {
-    console.error('Database error:', error);
-    return Response.json({
-      departing: [],
-      returning: [],
-      error: "Failed to fetch flights"
-    }, { status: 500 });
+    console.error("Database error:", error);
+    return Response.json(
+      {
+        departing: [],
+        returning: [],
+        error: "Failed to fetch flights",
+      },
+      { status: 500 }
+    );
   }
 }
 
 async function GetFlights(start: string | null, finish: string | null, date: string | null) {
-  if(!start || !finish) {
+  if (!start || !finish) {
     return [];
   }
 
   let flights;
 
-  if(date && date.trim() !== ''){
+  if (date && date.trim() !== "") {
     flights = await sql`
     SELECT 
       flight_id AS id,
@@ -87,7 +89,6 @@ async function GetFlights(start: string | null, finish: string | null, date: str
 
   `;
   }
-  
 
   return flights;
 }
