@@ -19,6 +19,8 @@ interface IncrementProps {
 export default function Increment({ name, label }: IncrementProps) {
   let [ref, increment, decrement] = useIncrement();
 
+  const defaultValue = name === "adult" ? 1 : 0
+
   return (
     <div className={styles.wrapper}>
       <label className={styles.label} htmlFor={name}>
@@ -34,9 +36,9 @@ export default function Increment({ name, label }: IncrementProps) {
           id={name}
           name={name}
           ref={ref}
-          defaultValue="0"
+          defaultValue={defaultValue}
           type="number"
-          min="0"
+          min={defaultValue}
           step="1"
         />
         <button type="button" className={styles.btn} onClick={increment}>

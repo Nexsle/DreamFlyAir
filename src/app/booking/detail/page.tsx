@@ -4,7 +4,7 @@ import Passenger from "@/types/Passenger";
 import styles from "./page.module.css";
 import PassengerCard from "./Passenger";
 import Continue from "../_components/Continue";
-import { useGlobalStore } from "@/stores/globalStore";
+import { useSeatStore } from "@/stores/seatStore";
 
 // two different testing objects for different scenarios
 const passengerUnkown: Array<Passenger> = [
