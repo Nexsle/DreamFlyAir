@@ -1,0 +1,70 @@
+@import url('https://fonts.googleapis.com/css2?family=Libre+Barcode+39+Extended+Text&display=swap');
+
+.heading {
+  margin: var(--lg-x) 0 var(--sm);
+  font-size: 2.4rem;
+  font-weight: 700;
+}
+
+.heading2 {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  font-weight: 500;
+  font-size: 2rem;
+}
+
+.passContainer {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+
+  gap: 15px;
+}
+
+.passTicket {
+  padding: 20px;
+  margin: 10px;
+  width: 20vw;
+
+  border: 1px solid black;
+  border-radius: 10px;
+}
+
+.passDetails {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
+  margin-top: 10px;
+
+  text-align: center;
+}
+
+.passFlight {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
+  margin-bottom: 30px;
+}
+
+.passFlight div:last-child {
+  text-align: right;
+}
+
+.libre-barcode-39-extended-text-regular {
+  font-family: "Libre Barcode 39 Extended Text", system-ui;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.passBarcode {
+  font-family: "Libre Barcode 39 Extended Text";
+  border-top: 1px dashed black;
+
+  padding: 20px;
+  margin-top: 10px;
+
+  text-align: center;
+  font-size: 45px;
+}
