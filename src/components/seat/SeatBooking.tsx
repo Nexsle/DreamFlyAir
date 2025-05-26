@@ -4,6 +4,8 @@ import React, { useState } from "react";
 import SeatSelection, { SeatInfo } from "./SeatGrid/SeatGrid";
 import styles from "./SeatBooking.module.css";
 import SeatSummary from "./SeatSummary/SeatSummary";
+import { useSeatStore } from "@/stores/seatStore";
+import { useRouter } from "next/navigation";
 
 type SeatBookingProps = {
   rows: number;
@@ -11,6 +13,13 @@ type SeatBookingProps = {
 };
 
 const SeatBooking: React.FC<SeatBookingProps> = ({ rows, bookedSeats }) => {
+  const router = useRouter();
+
+  const selectedSeats = useSeatStore(state => state.selectedSeats);
+  const selectSeat = useSeatStore(state => state.selectSeat);
+  const deselectSeat = useSeatStore(state => state.deselectSeat);
+
+
   // Aircraft configuration
   const seatsPerRow = 6;
 
@@ -67,6 +76,23 @@ const SeatBooking: React.FC<SeatBookingProps> = ({ rows, bookedSeats }) => {
   const [seats, setSeats] = useState<SeatInfo[]>(generateSeats());
 
   const handleSeatSelection = (seatId: string): void => {
+    const selectedSeat = seats.find(seat => seat.id == seatId); 
+
+    if(!selectedSeat || selectedSeat.status === "Booked") return;
+
+    const isAlreadySelected = selectedSeats.some(seat => seat.seatId == seatId);
+
+    if(isAlreadySelected){
+      deselectSeat(seatId);
+    }else{
+      selectSeat({
+        seatId: selectedSeat.id,
+        price: selectedSeat.price,
+        type: selectedSeat.type,
+      })
+    }
+
+
     setSeats(currentSeat =>
       currentSeat.map(seat => {
         if (seat.id === seatId) {
@@ -90,17 +116,36 @@ const SeatBooking: React.FC<SeatBookingProps> = ({ rows, bookedSeats }) => {
     );
   };
 
-  const selectedSeats = seats.filter(seat => seat.status === "Selected");
+  // const selectedSeats = seats.filter(seat => seat.status === "Selected");
 
   const handleContinue = () => {
+    if(selectedSeats.length === 0){
+      alert("Please select at least one seat");
+      return;
+    }
+
+
     console.log("Continue to next step with selected seat: ", selectedSeats);
+
+    router.push("/booking/service");
+
   };
 
   return (
     <div className={styles.pageContainer}>
       <div className={styles.bookingLayout}>
+
         <div className={styles.seatMapContainer}>
-          <SeatSelection seats={seats} onSeatSelect={handleSeatSelection} />
+          <div className={styles.aircraftContainer}>
+            <img
+              src="/images/longer.png"
+              alt="Aircraft Layout"
+              className={styles.aircraftImage}
+            />
+            <div className={styles.seatGridOverlay}>
+              <SeatSelection seats={seats} onSeatSelect={handleSeatSelection} />
+            </div>
+          </div>
         </div>
 
         <div className={styles.sidebarContainer}>

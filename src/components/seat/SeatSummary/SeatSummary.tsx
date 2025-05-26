@@ -1,9 +1,10 @@
 import React from "react";
 import { SeatInfo } from "../SeatGrid/SeatGrid";
 import styles from "./SeatSummary.module.css";
+import { Seat } from "@/types/Seat";
 
 type SeatSummaryProps = {
-  selectedSeats: SeatInfo[];
+  selectedSeats: Seat[];
   onContinue: () => void;
 };
 
@@ -20,8 +21,8 @@ const SeatSummary: React.FC<SeatSummaryProps> = ({ selectedSeats, onContinue }) 
         <>
           <div className={styles.selectedSeatsGrid}>
             {selectedSeats.map(seat => (
-              <div key={seat.id} className={styles.selectedSeatItem}>
-                <div className={styles.seatId}>{seat.id}</div>
+              <div key={seat.seatId} className={styles.selectedSeatItem}>
+                <div className={styles.seatId}>{seat.seatId}</div>
                 <div className={styles.seatType}>{seat.type}</div>
                 <div className={styles.seatPrice}>${seat.price.toFixed(2)}</div>
               </div>

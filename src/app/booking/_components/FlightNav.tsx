@@ -6,12 +6,6 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import styles from "./FlightNav.module.css";
 
-// TODO:
-// determine unique identifier for form process
-// turn svg's into an icon image
-// style links that go up to a specified classname but not further
-// conditionally apply styles for link
-
 export default function FlightNav() {
   const pathname = usePathname();
 

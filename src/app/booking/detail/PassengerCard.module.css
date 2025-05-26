@@ -18,6 +18,7 @@
 
 .fieldset {
   display: flex;
+  flex-wrap: wrap;
   gap: var(--md);
   border: 0;
   outline: 0;

@@ -1,0 +1,66 @@
+.container {
+  padding: var(--md);
+}
+
+.top {
+  display: flex;
+  align-items: center;
+  gap: var(--lg-x);
+  padding-bottom: var(--sm);
+  border-bottom: 1px solid var(--shadow);
+}
+
+.top > label {
+  display: flex;
+  align-items: center;
+  gap: var(--sm);
+  font-size: 1.6rem;
+}
+
+.radio {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  /* margin-left: var(--sm); */
+}
+
+/* middle part */
+
+.calendar {
+  margin: var(--md) 0;
+}
+
+/* bottom part */
+.bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding-top: var(--sm);
+  border-top: 1px solid var(--shadow);
+  color: green;
+}
+
+.reset {
+  /* font-size: 1.6rem; */
+  font-weight: 600;
+  color: var(--primary);
+  background-color: inherit;
+  transition: color 0.1s ease-out;
+}
+
+.reset:hover {
+  color: var(--primary-hover);
+}
+
+.confirm {
+  font-weight: 700;
+  color: white;
+  background-color: var(--secondary);
+  padding: var(--sm);
+  transition: background-color 0.1s ease-out;
+}
+
+.confirm:hover {
+  background-color: var(--secondary-hover);
+}

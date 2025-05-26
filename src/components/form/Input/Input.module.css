@@ -1,0 +1,81 @@
+.container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  grid-auto-flow: column;
+
+  position: relative;
+  anchor-name: --popover;
+  width: 100%;
+
+  box-shadow: 0 0 0 1px var(--shadow);
+  border-radius: var(--sm);
+  padding: var(--sm) var(--md);
+}
+
+.label {
+  font-size: 1.2rem;
+  font-weight: 400;
+  text-align: left;
+
+  cursor: pointer;
+  pointer-events: none;
+}
+
+.input {
+  font-size: 1.6rem;
+  padding-left: 0;
+  border: none;
+  outline: none;
+  pointer-events: none;
+}
+
+.icon {
+  align-self: center;
+  justify-self: right;
+  grid-row: span 2;
+  line-height: 0;
+}
+
+/* content */
+
+.content {
+  position: absolute;
+  /* position-anchor: --popover; */
+  top: anchor(bottom);
+  left: anchor(left);
+  margin-block-start: var(--sm);
+
+  width: max-content;
+  min-width: 325px;
+  max-height: 425px;
+
+  border: 0;
+  box-shadow: 0 0 0 1px var(--shadow);
+  border-radius: var(--xs);
+  width: max-content;
+  height: min-content;
+
+  opacity: 0;
+  transition: all 0.1s ease-out allow-discrete;
+}
+
+.content:popover-open {
+  opacity: 1;
+
+  @starting-style {
+    opacity: 0;
+  }
+}
+
+/* hover styles */
+.container,
+.input {
+  background-color: rgb(250, 250, 250);
+  transition: background-color 0.1s ease-out;
+}
+
+.container:hover,
+.container:hover > .input {
+  background-color: rgb(240, 240, 240);
+}

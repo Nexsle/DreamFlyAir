@@ -1,91 +1,53 @@
 "use client";
-import FlightNav from "../_components/FlightNav";
-import styles from "./flight.module.css";
-import { useState } from "react";
 
 import Flight from "@/types/Flight";
 import { SelectedContext } from "@/context";
 import FlightCard from "./_components/FlightCard";
 import Continue from "../_components/Continue";
+import useSWR from "swr";
 
-const departingFlights: Array<Flight> = [
-  {
-    id: "d1",
-    location: "Sydney",
-    destination: "Nowhere",
-    departure: new Date("2025-05-12"),
-    arrival: new Date("2025-05-13"),
-    price: 299,
-    plane: "dfds",
-  },
-  {
-    id: "d2",
-    location: "Brisbane",
-    destination: "New Zealand",
-    departure: new Date("2025-03-15"),
-    arrival: new Date("2025-03-16"),
-    price: 329,
-    plane: "das",
-  },
-];
-const returningFlights: Array<Flight> = [
-  {
-    id: "r1",
-    location: "Downey",
-    destination: "Uppity",
-    departure: new Date("2025-04-05"),
-    arrival: new Date("2025-04-06"),
-    price: 289,
-    plane: "dfds",
-  },
-  {
-    id: "r2",
-    location: "For",
-    destination: "Noew",
-    departure: new Date("2025-04-04"),
-    arrival: new Date("2025-04-05"),
-    price: 259,
-    plane: "dfds",
-  },
-];
+import flightReviver from "@/utils/flightReviver";
+import { useFlightStore } from "stores/flightStore";
+import styles from "./flight.module.css";
+import { useGlobalStore } from "@/stores/globalStore";
+import { useShallow } from "zustand/shallow";
 
-// const testSelected = {
-//   depart: {
-//     id: "r1",
-//     location: "Downey",
-//     destination: "Uppity",
-//     departure: new Date("2025-03-15"),
-//     arrival: new Date("2025-03-16"),
-//     price: 289,
-//     plane: "dfds",
-//   },
-//   return: {
-//     id: "d2",
-//     location: "Brisbane",
-//     destination: "New Zealand",
-//     departure: new Date("2025-05-12"),
-//     arrival: new Date("2025-05-13"),
-//     price: 329,
-//     plane: "das",
-//   },
-// };
+const URL = process.env.NEXT_PUBLIC_API_URL + "/booking/flight?";
 
-interface FlightPageState {
-  depart: Flight | undefined;
-  return: Flight | undefined;
-}
+const fetcher = async (searchParams: URLSearchParams) => {
+  const response = await fetch(URL + searchParams);
+  const data = await response.text();
+  return await JSON.parse(data, flightReviver);
+};
 
 export default function FlightPage() {
-  const [selected, setSelected] = useState<FlightPageState>({
-    depart: undefined,
-    return: undefined,
-  });
+  const details = useGlobalStore(
+    useShallow(state => {
+      return {
+        location: state.location || "",
+        destination: state.destination || "",
+        hasReturnFlight: state.hasReturnFlight ? "true" : "",
+        departureDate: state.departureDate || "",
+        returnDate: state.returnDate || "",
+      };
+    })
+  );
 
-  const changeDeparture = (flight: Flight) => setSelected({ ...selected, depart: flight });
-  const changeReturn = (flight: Flight) => setSelected({ ...selected, return: flight });
+  const getDepart = useFlightStore(state => state.departFlight);
+  const getReturn = useFlightStore(state => state.returnFlight);
 
-  const totalPrice =
-    (selected.depart ? selected.depart.price : 0) + (selected.return ? selected.return.price : 0);
+  const setDepart = useFlightStore(state => state.setDepartFlight);
+  const setReturn = useFlightStore(state => state.setReturnFlight);
+
+  const searchParams = new URLSearchParams(details);
+  const { data } = useSWR("flights", () => fetcher(searchParams));
+
+  const totalPrice = (getDepart?.price || 0) + (getReturn?.price || 0);
+
+  // Show loading until data is fetched
+  if (!data) {
+    return <div className={styles.pageContainer}>Loading flights...</div>;
+  }
 
   return (
     <div className={styles.pageContainer}>
@@ -94,20 +56,20 @@ export default function FlightPage() {
       <section className={styles.flightSelection}>
         <h2 className={styles.heading2}>Departing Flights</h2>
 
-        <SelectedContext.Provider value={[selected.depart, changeDeparture]}>
-          {departingFlights.map(flight => (
+        <SelectedContext.Provider value={[getDepart, setDepart]}>
+          {data.departing.map((flight: Flight) => (
             <FlightCard key={flight.id} flight={flight} />
           ))}
         </SelectedContext.Provider>
 
-        <SelectedContext.Provider value={[selected.return, changeReturn]}>
+        <SelectedContext.Provider value={[getReturn, setReturn]}>
           <h2 className={styles.heading2}>Returning Flights</h2>
-          {returningFlights.map(flight => (
+          {data.returning.map((flight: Flight) => (
             <FlightCard key={flight.id} flight={flight} />
           ))}
         </SelectedContext.Provider>
 
-        <Continue price={totalPrice} />
+        <Continue price={totalPrice} link="./baggage" />
       </section>
     </div>
   );

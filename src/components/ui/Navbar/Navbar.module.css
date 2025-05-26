@@ -44,3 +44,36 @@
 .container a {
   font-size: 1.4rem;
 }
+
+/* edit booking */
+
+.edit {
+  position: relative;
+  background-color: white;
+  color: var(--accent);
+
+  font-size: 1.4rem;
+  font-weight: 400;
+  transition: color 0.1s ease-out;
+
+  anchor-name: --edit;
+}
+
+.edit:hover {
+  color: var(--secondary);
+}
+
+.content {
+  position: absolute;
+  top: anchor(bottom);
+  left: anchor(-100%);
+  margin-block-start: var(--lg);
+
+  font-size: 1.4rem;
+  padding: var(--sm);
+  border-radius: var(--xs);
+  box-shadow: 0 0 0 1px var(--shadow);
+
+  outline: none;
+  border: none;
+}

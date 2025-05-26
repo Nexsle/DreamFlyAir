@@ -1,8 +1,8 @@
 .container {
   box-shadow: 0 0 1px 1px var(--shadow);
   background-color: white;
-  border-radius: var(--lg);
-  padding: var(--lg);
+  border-radius: var(--md);
+  padding: var(--md);
 }
 
 .upper {
@@ -11,6 +11,14 @@
   grid-template-rows: 1fr 2fr;
   grid-auto-flow: column;
 }
+
+/* left side */
+
+.location {
+  font-size: 1.4rem;
+}
+
+/*  */
 
 .priceLabel,
 .price {

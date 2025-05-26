@@ -26,7 +26,10 @@
       "@/components/ui": ["components/ui/index.ts"],
       "@/components/form": ["components/form/index.ts"],
       "@/types/*": ["types/*"],
-      "@/context": ["Context.tsx"]
+      "@/context": ["Context.tsx"],
+      "@/stores/*": ["stores/*"],
+      "@/database": ["database.ts"],
+      "@/utils/*": ["utils/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

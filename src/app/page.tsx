@@ -1,101 +1,72 @@
 "use server";
 
-import Form from "next/form";
 import styles from "./page.module.css";
 
 import { CalendarIcon, SewingPinFilledIcon, MagnifyingGlassIcon } from "@radix-ui/react-icons";
-import { Card, Deal, Hero } from "@/components/ui";
+import { Increment, Input } from "@/components/form";
+import { Deal } from "@/components/ui";
 import Image from "next/image";
-import { Increment, Select } from "@/components/form";
-import Flight from "@/types/Flight";
 
-import Locations from "./_options/Locations";
-import Dates from "./_options/Dates";
-import { getData } from "./actions";
-
-const featuredFlights: Array<Flight> = [
-  {
-    id: "d1",
-    location: "Sydney",
-    destination: "Nowhere",
-    departure: new Date("2025-05-12"),
-    arrival: new Date("2025-05-13"),
-    price: 299,
-    plane: "dfds",
-  },
-  {
-    id: "d2",
-    location: "Brisbane",
-    destination: "New Zealand",
-    departure: new Date("2025-03-15"),
-    arrival: new Date("2025-03-16"),
-    price: 329,
-    plane: "das",
-  },
-  {
-    id: "r1",
-    location: "Downey",
-    destination: "Uppity",
-    departure: new Date("2025-04-05"),
-    arrival: new Date("2025-04-06"),
-    price: 289,
-    plane: "dfds",
-  },
-  {
-    id: "r2",
-    location: "For",
-    destination: "Noew",
-    departure: new Date("2025-04-04"),
-    arrival: new Date("2025-04-05"),
-    price: 259,
-    plane: "dfds",
-  },
-];
+import FlightCalendar from "./_options/FlightCalendar";
+import { getFlights } from "./actions";
+import Airports from "./_components/Airports";
+import HomeForm from "./_components/HomeForm";
 
 const magIcon = <SewingPinFilledIcon width="24px" height="24px" />;
 const calIcon = <CalendarIcon width="24px" height="24px" />;
 
 export default async function Home() {
+  const flights = await getFlights();
+
   return (
     <main className={styles.main}>
       <h1 className={styles.heading}>Your Destination Awaits</h1>
-      <Image className="background" src="/images/pietro.jpg" alt="" width={5979} height={3986} />
+      <Image
+        className="background"
+        src="/images/pietro.webp"
+        alt=""
+        width={3461}
+        height={2306}
+        priority
+      />
 
       <div className={styles.card}>
-        {/* <button onClick={getData}>Test</button> */}
-        <Form action="post" className={styles.form}>
+        <HomeForm className={styles.form}>
+          {/* <Form action="/booking/flight" className={styles.form}> */}
           <div className={styles.formRow}>
-            <Select name="location" label="From" icon={magIcon} placeholder="Current">
-              <Locations />
-            </Select>
+            <Input name="location" label="From" icon={magIcon} placeholder="Current">
+              <Airports />
+            </Input>
 
-            <Select name="destination" label="To" icon={magIcon} placeholder="Where?">
-              <Locations />
-            </Select>
+            <Input name="destination" label="To" icon={magIcon} placeholder="Where?">
+              <Airports />
+            </Input>
 
-            <Select name="departure" label="Departure Date" icon={calIcon} placeholder="When?">
-              <Dates />
-            </Select>
+            <Input name="date" label="Date" placeholder="When?" icon={calIcon} disabled>
+              <FlightCalendar />
+            </Input>
           </div>
 
           <div className={styles.itemRow}>
             <span className={styles.itemRow}>
-              <Increment name="adults" label="Adults" />
+              <Increment name="adult" label="Adults" />
               <Increment name="children" label="Children" />
-              <Increment name="infants" label="Infants" />
+              <Increment name="infant" label="Infants" />
             </span>
 
             <button className={styles.submit} type="submit">
               <MagnifyingGlassIcon width="24px" height="24px" />
             </button>
           </div>
-        </Form>
+        </HomeForm>
+
+        {/* </Form> */}
       </div>
 
       <section className={styles.featuredContainer}>
         <h2 className={styles.featuredHeading}>Featured deals</h2>
         <div className={styles.featured}>
-          {featuredFlights.map(flight => (
+          {flights.map(flight => (
             <Deal key={flight.id} flight={flight} />
           ))}
         </div>

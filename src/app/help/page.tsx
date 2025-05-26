@@ -56,7 +56,15 @@ const QUESTIONS = [
 export default async function Help() {
   return (
     <main>
-      <Image className="background" src="/images/pietro.jpg" alt="" width={5979} height={3986} />
+      <Image
+        className="background"
+        src="/images/pietro.webp"
+        alt=""
+        width={3461}
+        height={2306}
+        priority
+      />
+
       <h1 className="heading">Frequently Asked Questions</h1>
       <Card className={styles.container}>
         <Kokomo />
